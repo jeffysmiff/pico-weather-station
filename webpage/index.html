@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+
+    <head>
+        <script src="https://code.jquery.com/jquery-3.6.1.min.js"></script>
+        <script src="jquery.textfill.min.js"></script>
+        <link href="http://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet" type="text/css">
+        <script>
+            weather = {
+                t: 18.15,
+                p: 997.89,
+                h: 56.96,
+                w: 8.6
+            }
+        </script>
+        <style>
+            @import url('http://fonts.googleapis.com/css?family=Rubik');
+            .roundedbox {
+                border-radius: 25px;
+                background: #FF0000;
+                width: 90vw;
+                height: 300px;
+                font-family: 'Rubik', sans-serif;
+                color: white;
+                text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+                display: inline-block;
+                line-height: 300px;
+                vertical-align: middle;
+            }
+
+            .roundedbox::after {
+                content: "";
+                clear: both;
+                display: inline-block;
+            }
+
+            .firstweathercontainer {
+                float: left;
+                padding-left: 10px;
+                padding-right: 10px;
+                width: 60%;
+                height: 100%;
+            }
+
+            .secondweathercontainer {
+                float: right;
+                padding-left: 10px;
+                padding-right: 10px;
+                width: 30%;
+                height: 100%;
+            }
+
+            .firstweather {
+                width: 100%;
+                height: 100%;
+            }
+
+            .secondweather {
+                width: 100%;
+                height: 100%;
+            }
+
+            .weatherblock {
+                width: 100%;
+                height: 30%;
+            }
+
+            .label {
+                float: left;
+                width: 40%;
+                height: 100%;
+                line-height: 100%;
+                display: block
+            }
+
+            .value {
+                float: right;
+                width: 40%;
+                height: 100%;
+                line-height: 100%;
+            }
+        </style>
+    </head>
+
+    <body>
+        <div class="roundedbox" id="temperature">
+            <div class="firstweathercontainer">
+                <div id="temp" class="firstweather">
+                    <span  id="content">&nbsp;</span>
+                </div>
+            </div>
+            <div class="secondweathercontainer">
+                <div class="secondweather">
+                    <div id="secondaryblock">
+                        <div class="weatherblock" >
+                            <span class="label" id="pressurelabel">
+                                <span id="pressurelabeltext">Pressure:</span>
+                            </span>
+                            <span class="value" id="pressurevaluetext">1017hPa</span>
+                        </div>
+                        <div class="weatherblock" >
+                            <span class="label" id="humiditylabel">
+                                <span id="humiditylabeltext">Humidity:</span>
+                            </span>
+                            <span class="value" id="humidityvaluetext">58%</span>
+                        </div>
+                        <div class="weatherblock">
+                            <span class="label" id="windlabel">
+                                <span id="windlabeltext">Wind:</span>
+                            </span>
+                            <span class="value" id="windvaluetext">8.6m/s</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script>
+            $('#content').html('13:30 | ' + weather.t + '&#176;C | ');
+            $('#temp').textfill({maxFontPixels: 1000});
+            $("#secondaryblock").css("height", $("#content").height());
+            $('#pressurelabel').textfill({maxFontPixels: 1000});
+            $('#humiditylabeltext').css("font-size", $("#pressurelabeltext").css("font-size"));
+            $('#windlabeltext').css("font-size", $('#pressurelabeltext').css("font-size"));
+            $('#pressurevaluetext').css("font-size", $('#pressurelabeltext').css("font-size"));
+            $('#humidityvaluetext').css("font-size", $('#pressurelabeltext').css("font-size"));
+            $('#windvaluetext').css("font-size", $('#pressurelabeltext').css("font-size"));
+        </script>
+    </body>
+
+</html>
