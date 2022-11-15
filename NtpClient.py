@@ -2,6 +2,7 @@ import network
 import socket
 import time
 import struct
+from machine import RTC
 
 class NtpClient:
     def __init__(self, ntp_host):
@@ -22,7 +23,7 @@ class NtpClient:
         val = struct.unpack("!I", msg[40:44])[0]
         t = val - self.NTP_DELTA    
         tm = time.gmtime(t)
-        machine.RTC().datetime((tm[0], tm[1], tm[2], tm[6] + 1, tm[3], tm[4], tm[5], 0))
+        RTC().datetime((tm[0], tm[1], tm[2], tm[6] + 1, tm[3], tm[4], tm[5], 0))
 
 if __name__ == "__main__":
     from Wifi import Wifi
