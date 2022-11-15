@@ -3,7 +3,9 @@ from BME280Reader import BME280Reader
 from Wifi import Wifi
 from NtpClient import NtpClient
 from picozero import pico_temp_sensor
+from colourcalc import ColourCalc
 import socket
+import time
 
 class WeatherServer:
     def __init__(self, ntp_host, port, bme280_sda, bme280_scl, wind_speed_pin):
@@ -13,12 +15,14 @@ class WeatherServer:
         # Set the time from the provided NTP server
         self.ntp_host = ntp_host
         self.ntp_client = NtpClient(self.ntp_host)
+        self.ntp_client.set_time()
         # Set the listening port for incoming requests
         self.port = port
         # Set up the BME280
         self.bme280_sda = bme280_sda
         self.bme280_scl = bme280_scl
         self.bme280_reader = BME280Reader(self.bme280_sda, self.bme280_scl)
+        self.colourcalc = ColourCalc()
         # Set up the wind speed detector
         self.wind_speed_pin = wind_speed_pin
         self.wind_speed_sensor = RSFSJTN01(self.wind_speed_pin)
@@ -30,12 +34,18 @@ class WeatherServer:
         
     def get_data(self):
         pico_temp = pico_temp_sensor.temp
+        (year, month, mday, hour, minute, second, weekday, yearday) = time.localtime() # get struct_time
+        time_string = f'{year}/{month:02}/{mday:02}-{hour:02}:{minute:02}:{second:02}'
         (temp,pressure,humidity) = self.bme280_reader.get_values()
+        #Derive colour to represent temperature
+        (red, green, blue) = self.colourcalc.calc_colour(int(temp))
         wind_speed = self.wind_speed_sensor.get_wind_speed()
         #Template JSON
         data = f"""{{
 "pico_temperature": "{pico_temp}",
+"time": "{time_string}",
 "temperature": "{temp}",
+"tempcolour": "#{red:02x}{green:02x}{blue:02x}",
 "pressure": "{pressure}",
 "humidity": "{humidity}",
 "wind_speed": "{wind_speed}"
