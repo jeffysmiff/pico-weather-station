@@ -15,115 +15,145 @@
         </script>
         <style>
             @import url('http://fonts.googleapis.com/css?family=Rubik');
-            .roundedbox {
+            .flex-container {
+                width: 95vw;
+                height: 95vh;
+                margin: auto;
+                padding: 10px;
                 border-radius: 25px;
                 background: #FF0000;
-                width: 90vw;
-                height: 300px;
                 font-family: 'Rubik', sans-serif;
                 color: white;
                 text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
-                display: inline-block;
-                line-height: 300px;
+                display: flex;
+                flex-direction: column;
+                flex-wrap: nowrap;
+                align-items: center;
                 vertical-align: middle;
             }
 
-            .roundedbox::after {
-                content: "";
-                clear: both;
-                display: inline-block;
+            .daterow {
+                height: 15%;
+                width: 100%;
+                margin: 10px;
+                vertical-align: middle;
+                text-align: center;
+                align-items: flex-start;
             }
 
-            .firstweathercontainer {
-                float: left;
-                padding-left: 10px;
-                padding-right: 10px;
+            .timerow {
+                height: 30%;
+                width: 100%;
+                margin: 10px;
+                vertical-align: middle;
+                text-align: center;
+                align-items: flex-start;
+            }
+
+            .weatherrow {
+                height: 55%;
+                width: 100%;
+                margin: 10px;
+                vertical-align: middle;
+                text-align: center;
+                align-items: flex-start;
+            }
+
+            .weathercontainer {
+                height: 100%;
+                width: 100%;
+                display: flex;
+                flex-direction: row;
+                flex-wrap: nowrap;
+            }
+
+            .temperaturecol {
+                height: 100%;
                 width: 60%;
-                height: 100%;
+                margin: 10px;
+                vertical-align: middle;
+                text-align: center;
+                align-items: flex-start;
             }
 
-            .secondweathercontainer {
-                float: right;
-                padding-left: 10px;
-                padding-right: 10px;
-                width: 30%;
+            .otherweathercol {
                 height: 100%;
+                width: 40%;
+                margin: 10px;
+                vertical-align: middle;
+                text-align: center;
+                align-items: flex-start;
             }
 
-            .firstweather {
+            .otherweathercontainer {
+                height: 100%;
                 width: 100%;
-                height: 100%;
+                display: flex;
+                flex-direction: column;
+                flex-wrap: nowrap;
+                align-items: flex-start;
             }
 
-            .secondweather {
-                width: 100%;
-                height: 100%;
-            }
-
-            .weatherblock {
+            .windspeedrow {
                 width: 100%;
                 height: 30%;
+                margin: 10px;
+                vertical-align: middle;
+                text-align: left;
             }
 
-            .label {
-                float: left;
-                width: 40%;
-                height: 100%;
-                line-height: 100%;
-                display: block
+            .pressurehumidityrow {
+                width: 100%;
+                height: 10%;
+                margin: 10px;
+                vertical-align: middle;
+                text-align: left;
             }
 
-            .value {
-                float: right;
-                width: 40%;
-                height: 100%;
-                line-height: 100%;
+            .spacerrow {
+                width: 100%;
+                height: 50%;
+                margin: 10px;
+                vertical-align: middle;
+                text-align: left;
             }
         </style>
     </head>
 
     <body>
-        <div class="roundedbox" id="temperature">
-            <div class="firstweathercontainer">
-                <div id="temp" class="firstweather">
-                    <span  id="content">&nbsp;</span>
-                </div>
-            </div>
-            <div class="secondweathercontainer">
-                <div class="secondweather">
-                    <div id="secondaryblock">
-                        <div class="weatherblock" >
-                            <span class="label" id="pressurelabel">
-                                <span id="pressurelabeltext">Pressure:</span>
-                            </span>
-                            <span class="value" id="pressurevaluetext">1017hPa</span>
-                        </div>
-                        <div class="weatherblock" >
-                            <span class="label" id="humiditylabel">
-                                <span id="humiditylabeltext">Humidity:</span>
-                            </span>
-                            <span class="value" id="humidityvaluetext">58%</span>
-                        </div>
-                        <div class="weatherblock">
-                            <span class="label" id="windlabel">
-                                <span id="windlabeltext">Wind:</span>
-                            </span>
-                            <span class="value" id="windvaluetext">8.6m/s</span>
+        <div class="flex-container">
+            <div id="date" class="daterow"><span>16th November 2022</span></div>
+            <div id="time" class="timerow"><span>18:20</span></div>
+            <div class="weatherrow">
+                <div class="weathercontainer">
+                    <div id="temperature" class="temperaturecol"><span>17&#176;C</span></div>
+                    <div class="otherweathercol">
+                        <div class="otherweathercontainer">
+                            <div id="windspeed" class="windspeedrow"><span>Wind: 10.1mph</span></div>
+                            <div id="pressure" class="pressurehumidityrow"><span id="pressurevalue">Pressure: 1010.8hPa</span></div>
+                            <div id="humidity" class="pressurehumidityrow"><span id="humidityvalue">Humidity: 57.6%</span></div>
+                            <div class="spacerrow">&nbsp;</div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
         <script>
-            $('#content').html('13:30 | ' + weather.t + '&#176;C | ');
-            $('#temp').textfill({maxFontPixels: 1000});
-            $("#secondaryblock").css("height", $("#content").height());
-            $('#pressurelabel').textfill({maxFontPixels: 1000});
-            $('#humiditylabeltext').css("font-size", $("#pressurelabeltext").css("font-size"));
-            $('#windlabeltext').css("font-size", $('#pressurelabeltext').css("font-size"));
-            $('#pressurevaluetext').css("font-size", $('#pressurelabeltext').css("font-size"));
-            $('#humidityvaluetext').css("font-size", $('#pressurelabeltext').css("font-size"));
-            $('#windvaluetext').css("font-size", $('#pressurelabeltext').css("font-size"));
+            $('#date').textfill({maxFontPixels: 1000});
+            $('#time').textfill({maxFontPixels: 1000});
+            $('#temperature').textfill({maxFontPixels: 1000});
+            $('#windspeed').textfill({maxFontPixels: 1000});
+            $('#pressure').textfill({maxFontPixels: 1000});
+            $('#humidityvalue').css("font-size", $("#pressurevalue").css("font-size"));
+            //$('#content').html('<span>' + weather.t + '&#176;C</span>');
+            //$('#content').textfill({maxFontPixels: 1000, widthOnly: true});
+            //$("#secondcontent").css("height", $("#content").height());
+            //$('#pressurelabel').textfill({maxFontPixels: 1000});
+            //$('#humiditylabeltext').css("font-size", $("#pressurelabeltext").css("font-size"));
+            //$('#windlabeltext').css("font-size", $('#pressurelabeltext').css("font-size"));
+            //$('#pressurevaluetext').css("font-size", $('#pressurelabeltext').css("font-size"));
+            //$('#humidityvaluetext').css("font-size", $('#pressurelabeltext').css("font-size"));
+            //$('#windvaluetext').css("font-size", $('#pressurelabeltext').css("font-size"));
         </script>
     </body>
 
