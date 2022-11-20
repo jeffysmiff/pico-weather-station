@@ -4,67 +4,31 @@
     <head>
         <script src="https://code.jquery.com/jquery-3.6.1.min.js"></script>
         <script src="jquery.textfill.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
         <link href="http://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet" type="text/css">
-        <script>
-            weather = {
-                t: 18.15,
-                p: 997.89,
-                h: 56.96,
-                w: 8.6
-            }
-        </script>
         <style>
             @import url('http://fonts.googleapis.com/css?family=Rubik');
             .flex-container {
                 width: 95vw;
                 height: 95vh;
                 margin: auto;
-                padding: 10px;
                 border-radius: 25px;
                 background: #FF0000;
                 font-family: 'Rubik', sans-serif;
                 color: white;
                 text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
                 display: flex;
-                flex-direction: column;
-                flex-wrap: nowrap;
+                justify-content: center;
                 align-items: center;
-                vertical-align: middle;
-            }
-
-            .daterow {
-                height: 15%;
-                width: 100%;
-                margin: 10px;
-                vertical-align: middle;
-                text-align: center;
-                align-items: flex-start;
-            }
-
-            .timerow {
-                height: 30%;
-                width: 100%;
-                margin: 10px;
-                vertical-align: middle;
-                text-align: center;
-                align-items: flex-start;
-            }
-
-            .weatherrow {
-                height: 55%;
-                width: 100%;
-                margin: 10px;
-                vertical-align: middle;
-                text-align: center;
-                align-items: flex-start;
             }
 
             .weathercontainer {
-                height: 100%;
+                height: 55%;
                 width: 100%;
                 display: flex;
                 flex-direction: row;
-                flex-wrap: nowrap;
+                justify-content: center;
+                align-items: center;
             }
 
             .temperaturecol {
@@ -73,7 +37,7 @@
                 margin: 10px;
                 vertical-align: middle;
                 text-align: center;
-                align-items: flex-start;
+                align-items: center;
             }
 
             .otherweathercol {
@@ -94,9 +58,27 @@
                 align-items: flex-start;
             }
 
-            .windspeedrow {
+            .daterow {
+                height: 20%;
                 width: 100%;
-                height: 30%;
+                margin: 10px;
+                vertical-align: middle;
+                text-align: left;
+                align-items: flex-start;
+            }
+
+            .timerow {
+                height: 20%;
+                width: 100%;
+                margin: 10px;
+                vertical-align: middle;
+                text-align: left;
+                align-items: flex-start;
+            }
+
+            .windspeedrow {
+                height: 20%;
+                width: 100%;
                 margin: 10px;
                 vertical-align: middle;
                 text-align: left;
@@ -112,7 +94,7 @@
 
             .spacerrow {
                 width: 100%;
-                height: 50%;
+                height: 20%;
                 margin: 10px;
                 vertical-align: middle;
                 text-align: left;
@@ -122,18 +104,16 @@
 
     <body>
         <div class="flex-container">
-            <div id="date" class="daterow"><span>16th November 2022</span></div>
-            <div id="time" class="timerow"><span>18:20</span></div>
-            <div class="weatherrow">
-                <div class="weathercontainer">
-                    <div id="temperature" class="temperaturecol"><span>17&#176;C</span></div>
-                    <div class="otherweathercol">
-                        <div class="otherweathercontainer">
-                            <div id="windspeed" class="windspeedrow"><span>Wind: 10.1mph</span></div>
-                            <div id="pressure" class="pressurehumidityrow"><span id="pressurevalue">Pressure: 1010.8hPa</span></div>
-                            <div id="humidity" class="pressurehumidityrow"><span id="humidityvalue">Humidity: 57.6%</span></div>
-                            <div class="spacerrow">&nbsp;</div>
-                        </div>
+            <div class="weathercontainer">
+                <div id="temperature" class="temperaturecol"><span id="tempvalue">17&#176;C</span></div>
+                <div class="otherweathercol">
+                    <div class="otherweathercontainer">
+                        <div id="date" class="daterow"><span id="datevalue">16th November 2022</span></div>
+                        <div id="time" class="timerow"><span id="timevalue">18:20</span></div>
+                        <div id="windspeed" class="windspeedrow"><span id="windvalue">Wind: 10.1mph</span></div>
+                        <div id="pressure" class="pressurehumidityrow"><span id="pressurevalue">Pressure: 1010.8hPa</span></div>
+                        <div id="humidity" class="pressurehumidityrow"><span id="humidityvalue">Humidity: 57.6%</span></div>
+                        <div class="spacerrow">&nbsp;</div>
                     </div>
                 </div>
             </div>
@@ -154,6 +134,49 @@
             //$('#pressurevaluetext').css("font-size", $('#pressurelabeltext').css("font-size"));
             //$('#humidityvaluetext').css("font-size", $('#pressurelabeltext').css("font-size"));
             //$('#windvaluetext').css("font-size", $('#pressurelabeltext').css("font-size"));
+            $( document ).ready(function() {
+                getData();
+            });
+            function getData() {
+                console.log('Getting data');
+                $.ajax({
+                    type: 'GET',
+                    url: 'http://192.168.100.24',
+                    dataType: 'json'
+
+                })
+                .done(function(data) {
+                        console.log('Success');
+                        var dateFromJson = data.time;
+                        var currentTime = moment(dateFromJson, 'YYYY/MM/DD-HH-mm-ss');
+                        $('#datevalue').text(currentTime.format('MMMM Do YYYY'));
+                        $('#timevalue').text(currentTime.format('HH:mm'));
+                        $('.flex-container').css('background', data.tempcolour);
+                        $('#tempvalue').html(Math.round(data.temperature) + '&#176;C');
+                        $('#pressurevalue').text('Pressure: ' + data.pressure + 'hPa');
+                        $('#humidityvalue').text('Humidity: ' + data.humidity + '%');
+                        $('#windvalue').text('Wind Speed: ' + (Math.round(data.wind_speed * 100) / 100).toFixed(2) + 'mph');
+                        $('#windspeed').textfill({maxFontPixels: 1000});
+                        $('#datevalue').css('font-size', $('#windvalue').css('font-size'));
+                        $('#timevalue').css('font-size', $('#windvalue').css('font-size'));
+                        $('#temperature').textfill({maxFontPixels: 1000});
+                        var datetextsize = parseInt($('#datevalue').css('font-size'));
+                        console.log('Large text size = ' + datetextsize);
+                        var smalltextsize = Math.round(( datetextsize * 0.75));
+                        console.log('Small text size = ' + smalltextsize);
+                        $('#pressurevalue').css('font-size', $('#datevalue').css('font-size') * 0.75);
+                        $('#humidityvalue').css('font-size', $('#datevalue').css('font-size') * 0.75);
+                    })
+                .fail(function() {
+                    console.log('Failure');
+                    $('#tempvalue').text('Unable to retrieve temperature');
+                    $('#temperature').textfill({maxFontPixels: 1000});
+                })
+                .always(function() {
+                    console.log('Scheduling next update');
+                    setTimeout(getData, 5000);
+                })
+            }
         </script>
     </body>
 
