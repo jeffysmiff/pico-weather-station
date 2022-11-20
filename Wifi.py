@@ -14,6 +14,7 @@ class Wifi:
                 print(f'SSID: {credentials['SSID']} Password: {credentials['Password']}')
         except Exception as e:
             print(f'Exception: {e}')
+        self.wlan = None
     
     def connect(self):
         # Continually loop until a connection is established
@@ -21,21 +22,28 @@ class Wifi:
             for credentials in self.data['Credentials']:
                 print(f'Attempting to connect to {credentials['SSID']}')
                 retry_count = 0
-                wlan = network.WLAN(network.STA_IF)
-                wlan.active(True)
-                wlan.connect(credentials['SSID'], credentials['Password'])
-                while (wlan.isconnected() == False) and (retry_count < 10):
+                self.wlan = network.WLAN(network.STA_IF)
+                self.wlan.active(True)
+                self.wlan.connect(credentials['SSID'], credentials['Password'])
+                while (self.wlan.isconnected() == False) and (retry_count < 10):
                     print(f'Waiting for connection...Attempt {retry_count}')
                     retry_count = retry_count + 1
                     time.sleep(2)
                 if retry_count == 10:
                     print(f'Cannot connect to {credentials['SSID']} - retries exceeded')
                 else:
-                    ip = wlan.ifconfig()[0]
+                    ip = self.wlan.ifconfig()[0]
                     print(f'Connected on {ip}')
                     pico_led.on()
                     state = 'ON'
                     return ip
+                
+    def disconnect(self):
+        if ( self.wlan.isconnected() ):
+            self.wlan.disconnect()
+            
+    def is_connected(self):
+        return self.wlan.isconnected()
                    
 if __name__ == "__main__":
     my_wifi = Wifi()
