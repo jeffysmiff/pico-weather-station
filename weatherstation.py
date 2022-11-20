@@ -53,6 +53,7 @@ class WeatherServer:
         response = f"""HTTP/1.1 200 OK
 Content-Type: application/json; encoding=utf8
 Content-Length: {len(data)}
+Access-Control-Allow-Origin: *
 
 {data}"""
         print(response)
@@ -60,6 +61,13 @@ Content-Length: {len(data)}
         
     def serve(self):
         while True:
+            if( self.wifi_connection.is_connected() == False ):
+                self.wifi_connection = Wifi()
+                self.ip = self.wifi_connection.connect()
+                address = (self.ip, self.port)
+                self.connection = socket.socket()
+                self.connection.bind(address)
+                self.connection.listen(1)
             print(self.connection)
             client = self.connection.accept()[0]
             print(client)
