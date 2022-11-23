@@ -6,6 +6,7 @@ from picozero import pico_temp_sensor
 from colourcalc import ColourCalc
 import socket
 import time
+import micropython
 
 class WeatherServer:
     def __init__(self, ntp_host, port, bme280_sda, bme280_scl, wind_speed_pin):
@@ -61,6 +62,8 @@ Access-Control-Allow-Origin: *
         
     def serve(self):
         while True:
+            print(f'Mem Info: {micropython.mem_info()}')
+            print('Waiting for request')
             if( self.wifi_connection.is_connected() == False ):
                 self.wifi_connection = Wifi()
                 self.ip = self.wifi_connection.connect()
@@ -80,7 +83,9 @@ Access-Control-Allow-Origin: *
             except IndexError:
                 pass
             client.send(self.get_data())
+            print('Data sent - closing')
             client.close()
+            print('Closed')
             
 # Use to test
 if __name__ == "__main__":
