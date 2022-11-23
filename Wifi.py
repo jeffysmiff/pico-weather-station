@@ -28,7 +28,7 @@ class Wifi:
                 while (self.wlan.isconnected() == False) and (retry_count < 10):
                     print(f'Waiting for connection...Attempt {retry_count}')
                     retry_count = retry_count + 1
-                    time.sleep(2)
+                    time.sleep(5)
                 if retry_count == 10:
                     print(f'Cannot connect to {credentials['SSID']} - retries exceeded')
                 else:
