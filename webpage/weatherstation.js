@@ -11,7 +11,7 @@ function getData() {
     console.log('Getting data');
     $.ajax({
         type: 'GET',
-        url: 'http://192.168.0.28',
+        url: 'https://jksmith.ddns.net:60443/weatherdata/',
         dataType: 'json'
 
     })
@@ -20,25 +20,23 @@ function getData() {
             console.log(JSON.stringify(data,null,2));
             var dateFromJson = data.time;
             var currentTime = moment(dateFromJson, 'YYYY/MM/DD-HH-mm-ss');
-            $('#datevalue').text(currentTime.format('MMMM Do YYYY'));
-            $('#timevalue').text(currentTime.format('HH:mm'));
             $('.flex-container').css('background', data.tempcolour);
+            $('#datevalue').html(currentTime.format(' Do MMMM YYYY HH:mm'));
+            $('#date').textfill({maxFontPixels: 1000, widthOnly: true});
             $('#tempvalue').html(Math.round(data.temperature) + '&#176;C');
-            $('#pressurevalue').text('Pressure: ' + data.pressure + 'hPa');
-            $('#humidityvalue').text('Humidity: ' + data.humidity + '%');
-            $('#windvalue').text('Wind: ' + (Math.round(data.wind_speed * 100) / 100).toFixed(2) + 'mph');
-            $('#date').textfill({maxFontPixels: 1000, changeLineHeight: true});
-            $('#windvalue').css('font-size', $('#datevalue').css('font-size'));
-            $('#timevalue').css('font-size', $('#datevalue').css('font-size'));
             $('#temperature').textfill({maxFontPixels: 1000});
-            var datetextsize = parseInt($('#datevalue').css('font-size'));
-            console.log('Large text size = ' + datetextsize);
-            var smalltextsize = Math.round(( datetextsize * 0.75));
-            console.log('Small text size = ' + smalltextsize);
-            $('#pressurevalue').css('font-size', $('#datevalue').css('font-size') * 0.75);
-            $('#humidityvalue').css('font-size', $('#datevalue').css('font-size') * 0.75);
+            $('#windvalue').text('Wind: ' + (Math.round(data.wind_speed * 100) / 100).toFixed(2) + 'mph');
+            $('#windspeed').textfill({maxFontPixels: 1000,});
+            $('#pressurevalue').text('P: ' + data.pressure + 'hPa');
+            $('#humidityvalue').text('H: ' + data.humidity + '%');
+            var windSize = parseInt($('#windvalue').css('font-size'));
+            console.log('Wind size: ' + windSize);
+            var pressHumSize = windSize * 0.75;
+            console.log('Pressure / Humidity size: ' + pressHumSize);
+            $('#pressurevalue').css('font-size', Math.round(pressHumSize) + 'px');
+            $('#humidityvalue').css('font-size', Math.round(pressHumSize) + 'px');
         })
-    .fail(function(jqXHR, textStatu) {
+    .fail(function(jqXHR, textStatus) {
         console.log('Failure: ' + textStatus);
         $('#tempvalue').text('Unable to retrieve temperature');
         $('#temperature').textfill({maxFontPixels: 1000});
