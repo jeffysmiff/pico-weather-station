@@ -19,7 +19,7 @@ function getData() {
             console.log('Success');
             console.log(JSON.stringify(data,null,2));
             var dateFromJson = data.time;
-            var currentTime = moment(dateFromJson, 'YYYY/MM/DD-HH-mm-ss');
+            var currentTime = moment(dateFromJson + "Z", 'YYYY/MM/DD-HH-mm-ssZ');
             $('.flex-container').css('background', data.tempcolour);
             $('#datevalue').html(currentTime.format(' Do MMMM YYYY HH:mm'));
             $('#date').textfill({maxFontPixels: 1000, widthOnly: true});
