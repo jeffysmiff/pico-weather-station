@@ -24,7 +24,7 @@ function getData() {
             $('#datevalue').html(currentTime.format(' Do MMMM YYYY HH:mm'));
             $('#datetime').textfill({maxFontPixels: 1000, widthOnly: true});
             console.log('Date size: ' + parseInt($('#datevalue').css('font-size')));
-            $('#tempvalue').html(Math.round(data.temperature) + '&#176;C');
+            $('#tempvalue').html((Math.round(data.temperature * 100) / 100).toFixed(1) + '&#176;C');
             $('#temperature').textfill({maxFontPixels: 1000});
             $('#windvalue').text('Wind: ' + (Math.round(data.wind_speed * 100) / 100).toFixed(2) + 'mph');
             $('#windspeed').textfill({maxFontPixels: 1000,});
